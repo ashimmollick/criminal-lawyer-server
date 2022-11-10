@@ -60,6 +60,12 @@ async function run() {
             res.send(resulte)
 
         })
+        app.delete('/review/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const resulte = await orderCollection.deleteOne(query)
+            res.send(resulte)
+        })
     }
     finally {
 
