@@ -20,6 +20,7 @@ async function run() {
     try {
         const serviceCollection = client.db('personalLawyer').collection('services')
         const serviceCollections = client.db('personalLawyer').collection('service')
+        const reviewCollections = client.db('personalLawyer').collection('review')
         app.get('/service', async (req, res) => {
             const query = {}
             const cursor = serviceCollections.find(query)
@@ -38,6 +39,26 @@ async function run() {
             const service = await serviceCollection.findOne(query)
             const services = await serviceCollections.findOne(query)
             res.send(service || services)
+        })
+
+        // review api 
+        app.get('/review', async (req, res) => {
+            let query = {}
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = reviewCollections.find(query)
+            const reviews = await cursor.toArray()
+
+            res.send(reviews)
+        })
+        app.post('/review', async (req, res) => {
+            const review = req.body
+            const resulte = await reviewCollections.insertOne(review)
+            res.send(resulte)
+
         })
     }
     finally {
